@@ -13,13 +13,6 @@ function die {
 	exit
 }
 
-function dialog {
-	TITLE=$1
-	MSG=$2
-	whiptail --title "$TITLE" --msgbox "$msg" 8 78
-}
-
-
 function red_text {
 	echo -e "\e[101m$1\e[0m"
 }
