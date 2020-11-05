@@ -30,8 +30,8 @@ function convert_to_text {
 		pdftotext -layout -nopgbrk -enc UTF-8 $FILENAME - > $FILENAME.txt
 
 		cat $FILENAME.txt | uconv -f utf8 -t utf8 -x Any-NFKC > ${FILENAME}_corrected.txt
-		mv $FILENAME.txt $TMPDIR
-		mv ${FILENAME}_corrected.txt $FILENAME.txt
+		mv "$FILENAME.txt" $TMPDIR
+		mv "${FILENAME}_corrected.txt" "$FILENAME.txt"
 		set +x
 	done
 }
