@@ -39,7 +39,7 @@ function install_if_not_exists {
 
 	if ! which $PROGNAME >/dev/null; then
 		red_text "$1 not found, installing it. Please enter your password for sudo."
-		sudo apt-get install $INSTALL
+		sudo apt-get -y install $INSTALL
 	fi
 }
 
