@@ -69,5 +69,6 @@ print $str
 
 install_if_not_exists "whiptail"
 install_if_not_exists "pdftotext" "poppler-utils"
+install_if_not_exists "perl" "perl"
 
 main
