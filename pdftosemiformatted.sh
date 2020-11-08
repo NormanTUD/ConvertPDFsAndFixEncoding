@@ -24,14 +24,36 @@ function die {
 
 function convert_to_text {
 	for FILENAME in $@; do
-		pdftotext -layout -nopgbrk -enc UTF-8 $FILENAME - > $FILENAME.txt
+		TMPFILEMAIN=${RANDOM}.txt
+		while [[ -e $TMPFILEMAIN ]]; do
+			TMPFILEMAIN=${RANDOM}.txt
+		done
+
+		TMPFILEUNICODE=${RANDOM}.txt
+		while [[ -e $TMPFILEUNICODE ]]; do
+			TMPFILEUNICODE=${RANDOM}.txt
+		done
+
+
 		FILENAME_WITHOUT_EXTENSION=$(echo "$FILENAME" | sed -e 's/\.pdf$//')
 
-		TMPFILE=${FILENAME}_corrected.txt
-		cat $FILENAME.txt | uconv -f utf8 -t utf8 -x Any-NFKC > $TMPFILE
-		mv "$FILENAME.txt" $TMPDIR
+		pdftotext -layout -nopgbrk -enc UTF-8 $FILENAME - > $TMPFILEMAIN
 
-		mv "$TMPFILE" "$FILENAME_WITHOUT_EXTENSION.txt"
+		cat $TMPFILEMAIN | uconv -f utf8 -t utf8 -x Any-NFKC > $TMPFILEUNICODE
+		mv $TMPFILEMAIN $TMPDIR
+
+		FINAL_FILENAME="$FILENAME_WITHOUT_EXTENSION.txt"
+
+		if [[ -e $FINAL_FILENAME ]]; then 
+			ORIGINAL_FINAL_FILENAME=$FINAL_FILENAME
+			I=0
+			while [[ -e $FINAL_FILENAME ]]; do
+				I=$(($I + 1))
+				FINAL_FILENAME="$FILENAME_WITHOUT_EXTENSION.$I.txt"
+			done
+			msg "Die Datei '$ORIGINAL_FINAL_FILENAME' existierte bereits. Die Datei wird angelegt als '$FINAL_FILENAME'"
+		fi
+		mv "$TMPFILEUNICODE" $FINAL_FILENAME
 	done
 }
 
@@ -78,7 +100,7 @@ print $str
 
 		eval "convert_to_text $(echo $FILESTOCONVERT)"
 	else
-		msg "There are no *.pdf-files in the current folder ($(pwd))"
+		msg "Im aktuellen Ordner gab es eine *.pdf-Dateien ($(pwd))"
 	fi
 }
 
