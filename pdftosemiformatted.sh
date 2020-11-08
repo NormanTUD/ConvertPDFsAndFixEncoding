@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#set -x
-
 TMPDIR="tmp"
 
 if ! [[ -d $TMPDIR ]]; then
