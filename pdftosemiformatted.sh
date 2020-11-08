@@ -15,6 +15,11 @@ function red_text {
 	echo -e "\e[101m$1\e[0m"
 }
 
+function green_text {
+	echo -e "\e[46m\e[103m$1\e[0m"
+}
+
+
 function die {
 	red_text $1
 	exit
@@ -22,6 +27,7 @@ function die {
 
 function convert_to_text {
 	for FILENAME in $@; do
+		green_text "Working in file $FILENAME"
 		TMPFILEMAIN=${RANDOM}.txt
 		while [[ -e $TMPFILEMAIN ]]; do
 			TMPFILEMAIN=${RANDOM}.txt
@@ -52,6 +58,7 @@ function convert_to_text {
 			msg "Die Datei '$ORIGINAL_FINAL_FILENAME' existierte bereits. Die Datei wird angelegt als '$FINAL_FILENAME'"
 		fi
 
+		green_text "Done working on File '$FILENAME', it's result is in '$FINAL_FILENAME'"
 		mv "$TMPFILEUNICODE" $FINAL_FILENAME
 	done
 }
