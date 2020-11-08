@@ -26,10 +26,12 @@ function convert_to_text {
 	for FILENAME in $@; do
 		set -x
 		pdftotext -layout -nopgbrk -enc UTF-8 $FILENAME - > $FILENAME.txt
+		FILENAME_WITHOUT_EXTENSION=$(echo "$FILENAME" | sed -e 's/\.pdf$//')
 
 		cat $FILENAME.txt | uconv -f utf8 -t utf8 -x Any-NFKC > ${FILENAME}_corrected.txt
 		mv "$FILENAME.txt" $TMPDIR
-		mv "${FILENAME}_corrected.txt" "$FILENAME.txt"
+
+		mv "${FILENAME}_corrected.txt" "$FILENAME_WITHOUT_EXTENSION.txt"
 		set +x
 	done
 }
@@ -54,11 +56,17 @@ function main {
 	FILES=$(perl -le '
 	$str = "";
 while (my $filename = <*.pdf>) {
-	$on = "ON";
-	if(-e "$filename.txt") {
-		$on = "OFF";
+	if($filename =~ m#\s#) {
+		warn qq#Die Datei "$filename" beinhaltet ein Leerzeichen. Leerzeichen machen Probleme. Daher kann ich sie nicht bearbeiten.\n#;
+	} else {
+		$filename_without_extension = $filename;
+		$filename_without_extension =~ s#\.pdf$##g;
+		$on = "ON";
+		if(-e "$filename_without_extension.txt") {
+			$on = "OFF";
+		}
+		$str .= qq#"$filename" "$filename" $on #;
 	}
-	$str .= qq#"$filename" "$filename" $on #;
 }
 print $str
 ')
