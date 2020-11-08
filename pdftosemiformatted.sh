@@ -84,7 +84,7 @@ function main {
 	$str = "";
 while (my $filename = <*.pdf>) {
 	if($filename =~ m#\s#) {
-		warn qq#Die Datei "$filename" beinhaltet ein Leerzeichen. Leerzeichen machen Probleme. Daher kann ich sie nicht bearbeiten. Benenne die Datei um.\n#;
+		warn qq#\e[101m$1Die Datei "$filename" beinhaltet ein Leerzeichen. Leerzeichen machen Probleme. Daher kann ich sie nicht bearbeiten. Benenne die Datei um.\e[0m\n#;
 	} else {
 		$filename_without_extension = $filename;
 		$filename_without_extension =~ s#\.pdf$##g;
