@@ -13,6 +13,11 @@ function die {
 	exit
 }
 
+function dialog {
+	MSG=$1
+	whiptail --title "Message" --msgbox "$MSG" 8 78
+}
+
 function red_text {
 	echo -e "\e[101m$1\e[0m"
 }
@@ -58,13 +63,16 @@ while (my $filename = <*.pdf>) {
 print $str
 ')
 
-	STR='whiptail --title "Dateien zum Konvertieren" --checklist "Welche Dateien sollen konvertiert werden?" 20 78 4 '
-	STR+="$FILES"
+	if [[ $FILES ]]; then
+		STR='whiptail --title "Dateien zum Konvertieren" --checklist "Welche Dateien sollen konvertiert werden?" 20 78 4 '
+		STR+="$FILES"
 
-	FILESTOCONVERT=$(eval $STR 3>&1 1>&2 2>&3)
+		FILESTOCONVERT=$(eval $STR 3>&1 1>&2 2>&3)
 
-	eval "convert_to_text $(echo $FILESTOCONVERT)"
-
+		eval "convert_to_text $(echo $FILESTOCONVERT)"
+	else
+		dialog "There are no *.pdf-files in the current folder ($(pwd))"
+	fi
 }
 
 install_if_not_exists "whiptail"
