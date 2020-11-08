@@ -53,6 +53,7 @@ function convert_to_text {
 			done
 			msg "Die Datei '$ORIGINAL_FINAL_FILENAME' existierte bereits. Die Datei wird angelegt als '$FINAL_FILENAME'"
 		fi
+
 		mv "$TMPFILEUNICODE" $FINAL_FILENAME
 	done
 }
@@ -66,7 +67,7 @@ function install_if_not_exists {
 	fi
 
 	if ! which $PROGNAME >/dev/null; then
-		red_text "$1 not found, installing it. Please enter your password for sudo."
+		red_text "$PROGNAME konnte nicht gefunden werden. Gebe, wenn danach gefragt wird, dein Benutzerpasswort ein, um das Programm zu installieren."
 		sudo apt-get -y install $INSTALL
 	fi
 }
